@@ -4,6 +4,10 @@ import praw
 import re
 import os
 
+class regex:
+    wikipedia_find = re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*")
+    wikipedia_replace = re.compile("m\.")
+
 def reply(comment, text):
     text += "\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? ^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!"
     print("Replying:")
@@ -23,15 +27,13 @@ def main():
     r = praw.Reddit(user_agent=user_agent)
     already_done = set()
     #compile regular regexs
-    wikipedia_find_regex = re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*")
-    wikipedia_replace_regex = re.compile("m\.")
     comments = r.get_subreddit('test').get_comments(limit=500)
     r.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
     for comment in comments:
         if comment.id not in already_done:
             text =""
             links = []
-            links.append(replace_links(comment.body, wikipedia_find_regex, wikipedia_replace_regex))
+            links.append(replace_links(comment.body, regex.wikipedia_find, regex.wikipedia_replace))
             if len(links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
