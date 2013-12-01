@@ -13,7 +13,7 @@ def reply(comment, text):
 
 def replace_links(comment, find_expression, replace_expression):
     links = []
-    for i in re.findall(find_expression, comment.body):
+    for i in re.findall(find_expression, comment):
         i = re.sub(replace_expression, "", i)
         links.append(i)
     return links
