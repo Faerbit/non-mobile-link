@@ -18,26 +18,30 @@ def replace_links(comment, find_expression, replace_expression):
         links.append(i)
     return links
 
-user_agent=("Non-mobile link 0.1 by /u/faerbit")
-r = praw.Reddit(user_agent=user_agent)
-already_done = set()
-#compile regular expressions
-wikipedia_find_expression = re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*")
-wikipedia_replace_expression = re.compile("m\.")
-comments = r.get_subreddit('test').get_comments(limit=500)
-r.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-for comment in comments:
-    if comment.id not in already_done:
-        text =""
-        links = []
-        links.append(replace_links(comment.body, wikipedia_find_expression, wikipedia_replace_expression))
-        if len(links) == 1:
-            text = "Non-mobile link: "
-            text += links[0]
-            reply(comment, text)
-        elif len(links) > 1:
-            text = "Non-mobile links:"
-            for i in links:
-                text += i
-                text += "\n\n"
-            reply(comment, text)
+def main():
+    user_agent=("Non-mobile link 0.1 by /u/faerbit")
+    r = praw.Reddit(user_agent=user_agent)
+    already_done = set()
+    #compile regular expressions
+    wikipedia_find_expression = re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*")
+    wikipedia_replace_expression = re.compile("m\.")
+    comments = r.get_subreddit('test').get_comments(limit=500)
+    r.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
+    for comment in comments:
+        if comment.id not in already_done:
+            text =""
+            links = []
+            links.append(replace_links(comment.body, wikipedia_find_expression, wikipedia_replace_expression))
+            if len(links) == 1:
+                text = "Non-mobile link: "
+                text += str(links[0])
+                reply(comment, text)
+            elif len(links) > 1:
+                text = "Non-mobile links:"
+                for i in links:
+                    text += str(i)
+                    text += "\n\n"
+                reply(comment, text)
+
+if __name__ == "__main__":
+    main()
