@@ -11,19 +11,26 @@ def reply(comment, text):
     comment.reply(text)
     already_done.add(comment.id)
 
+def replace_links(comment, find_expression, replace_expression):
+    links = []
+    for i in re.findall(find_expression, comment.body):
+        i = re.sub(replace_expression, "", i)
+        links.append(i)
+    return links
+
 user_agent=("Non-mobile link 0.1 by /u/faerbit")
 r = praw.Reddit(user_agent=user_agent)
 already_done = set()
-find_expression = re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*")
+#compile regular expressions
+wikipedia_find_expression = re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*")
+wikipedia_replace_expression = re.compile("m\.")
 comments = r.get_subreddit('test').get_comments(limit=500)
 r.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
 for comment in comments:
     if comment.id not in already_done:
         text =""
         links = []
-        for i in re.findall(find_expression, comment.body):
-            i = re.sub("m\.", "", i)
-            links.append(i)
+        links.append(replace_links(comment.body, wikipedia_find_expression, wikipedia_replace_expression)
         if len(links) == 1:
             text = "Non-mobile link: "
             text += links[0]
