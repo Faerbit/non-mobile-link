@@ -30,7 +30,7 @@ for comment in comments:
     if comment.id not in already_done:
         text =""
         links = []
-        links.append(replace_links(comment.body, wikipedia_find_expression, wikipedia_replace_expression)
+        links.append(replace_links(comment.body, wikipedia_find_expression, wikipedia_replace_expression))
         if len(links) == 1:
             text = "Non-mobile link: "
             text += links[0]
