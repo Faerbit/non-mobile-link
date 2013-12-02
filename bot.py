@@ -28,7 +28,7 @@ def main():
     user_agent=("Non-mobile link 0.1 by /u/faerbit")
     reddit = praw.Reddit(user_agent=user_agent)
     already_done = set()
-    comments = r.get_subreddit('test').get_comments(limit=500)
+    comments = reddit.get_subreddit('test').get_comments(limit=500)
     reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
     for comment in comments:
         if comment.id not in already_done:
