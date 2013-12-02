@@ -89,18 +89,18 @@ class TestRegex(unittest.TestCase):
             self.assertEqual(bot.replace_links(test_string), [non_mobile_link, non_mobile_link], msg)
 
 class TestAPI(unittest.TestCase):
-    testAPI=False
+    #testAPI=False
     def setUp(self):
-        if not TestAPI.testAPI:
-            TestAPI.skipTest(self, "testAPI not specified")
+        #if not TestAPI.testAPI:
+        #    TestAPI.skipTest(self, "testAPI not specified")
         reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
 
 if __name__ == "__main__":
     #if --test RAPI is passed test Reddit API
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--test")
-    arg=parser.parse_args()
-    if arg.test == "RAPI":
-        TestAPI.testAPI = True
-    del sys.argv[1:]
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument("--test")
+    #arg=parser.parse_args()
+    #if arg.test == "RAPI":
+    #    TestAPI.testAPI = True
+    #del sys.argv[1:]
     unittest.main()
