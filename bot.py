@@ -9,8 +9,8 @@ regex= [
     ]
 
 def reply(reply_object, text):
-        text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
-            "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
+    text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
+        "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
     if isinstance(reply_object, praw.object.Comment):
         reply_object.reply(text)
     if isinstance(reply_object, praw.object.Submission):
