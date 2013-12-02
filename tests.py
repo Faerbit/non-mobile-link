@@ -100,9 +100,35 @@ class TestAPI(unittest.TestCase):
     def setUp(self):
         #if not TestAPI.testAPI:
         #    TestAPI.skipTest(self, "testAPI not specified")
-        #reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
-        #reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-        #reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
+        reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
+        submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        already_checked = set()
+
+    def helper_search_for_comment(comment_text):
+        comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
+            "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
+        comments = self.submission.comments
+        for i in comments:
+            if comment.id not in self.already_checked and comment_text == i.body:
+                already_checked.add(comment.id)
+                return True
+        return False
+
+    def test_reply_function(self):
+        comment = self.submission.comments[0]
+        text="Testing reply function"
+        bot.reply(random_comment, text)
+        assertIs(helper_search_for_comment(text), True)
+
+    def test_main_loop(self):
+        bot.main("test")
+        text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
+        #test for submission and comment correction
+        assertIs(helper_search_for_comment(text), True)
+        assertIs(helper_search_for_comment(text), True)
+
 
 if __name__ == "__main__":
     #if --test RAPI is passed test Reddit API
