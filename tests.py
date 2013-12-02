@@ -100,13 +100,13 @@ class TestAPI(unittest.TestCase):
     def setUp(self):
         #if not TestAPI.testAPI:
         #    TestAPI.skipTest(self, "testAPI not specified")
-        reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
-        reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-        submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
-        submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
-        already_checked = set()
+        self.reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
+        self.reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
+        self.submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        self.submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        self.already_checked = set()
         #fake original set
-        already_done = set()
+        self.already_done = set()
 
     def helper_search_for_comment(comment_text):
         comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
