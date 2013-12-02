@@ -93,8 +93,7 @@ class TestAPI(unittest.TestCase):
     def setUp(self):
         if not TestAPI.testAPI:
             TestAPI.skipTest(self, "testAPI not specified")
-        user_agent("Non-mobile link tester by /u/faerbit")
-        reddit = praw.Reddit(user_agent=user_agend)
+        reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
 
 if __name__ == "__main__":
     #if --test RAPI is passed test Reddit API
