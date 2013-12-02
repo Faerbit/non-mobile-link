@@ -5,6 +5,7 @@ import re
 import unittest
 import argparse
 import sys
+import os
 
 class TestRegex(unittest.TestCase):
     non_link_word = "Goat"
@@ -88,12 +89,20 @@ class TestRegex(unittest.TestCase):
                 + " " + mobile_link + " " + TestRegex.non_link_word)
             self.assertEqual(bot.replace_links(test_string), [non_mobile_link, non_mobile_link], msg)
 
+    def test_every_regex_has_been_tested(self):
+        bot_regex = set()
+        for (find_regex, replace_regex) in bot.regex:
+            bot_regex.add(find_regex)
+        self.assertEqual(bot_regex, TestRegex.used_regex)
+
 class TestAPI(unittest.TestCase):
     #testAPI=False
     def setUp(self):
         #if not TestAPI.testAPI:
         #    TestAPI.skipTest(self, "testAPI not specified")
-        reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
+        #reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
+        #reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
+        #reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
 
 if __name__ == "__main__":
     #if --test RAPI is passed test Reddit API
