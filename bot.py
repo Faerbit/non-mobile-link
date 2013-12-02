@@ -5,7 +5,7 @@ import re
 import os
 
 regex= [
-    (re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*"), re.compile("m\.")) #wikipedia
+    (re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*"), re.compile("m\.")), #wikipedia
     ]
 
 def reply(comment, text):
