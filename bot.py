@@ -34,7 +34,7 @@ def main():
         if comment.id not in already_done:
             text =""
             links = []
-            links.append(replace_links(comment.body)
+            links.append(replace_links(comment.body))
             if len(links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
