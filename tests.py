@@ -105,6 +105,8 @@ class TestAPI(unittest.TestCase):
         submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
         submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
         already_checked = set()
+        #fake original set
+        already_done = set()
 
     def helper_search_for_comment(comment_text):
         comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
