@@ -11,8 +11,6 @@ regex= [
 def reply(comment, text):
     text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
         "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
-    print("Replying:")
-    print(text)
     comment.reply(text)
     already_done.add(comment.id)
 
