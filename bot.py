@@ -26,10 +26,10 @@ def replace_links(text):
 
 def main():
     user_agent=("Non-mobile link 0.1 by /u/faerbit")
-    r = praw.Reddit(user_agent=user_agent)
+    reddit = praw.Reddit(user_agent=user_agent)
     already_done = set()
     comments = r.get_subreddit('test').get_comments(limit=500)
-    r.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
+    reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
     for comment in comments:
         if comment.id not in already_done:
             text =""
