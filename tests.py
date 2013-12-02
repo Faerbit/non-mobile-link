@@ -3,6 +3,8 @@ import praw
 import bot
 import re
 import unittest
+import argparse
+import sys
 
 class TestRegex(unittest.TestCase):
     non_link_word = "Goat"
@@ -86,5 +88,20 @@ class TestRegex(unittest.TestCase):
                 + " " + mobile_link + " " + TestRegex.non_link_word)
             self.assertEqual(bot.replace_links(test_string), [non_mobile_link, non_mobile_link], msg)
 
+class TestAPI(unittest.TestCase):
+    testAPI=False
+    def setUp(self):
+        if not TestAPI.testAPI:
+            TestAPI.skipTest(self, "testAPI not specified")
+        user_agent("Non-mobile link tester by /u/faerbit")
+        reddit = praw.Reddit(user_agent=user_agend)
+
 if __name__ == "__main__":
+    #if --test RAPI is passed test Reddit API
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--test")
+    arg=parser.parse_args()
+    if arg.test == "RAPI":
+        TestAPI.testAPI = True
+    del sys.argv[1:]
     unittest.main()
