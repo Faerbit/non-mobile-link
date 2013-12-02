@@ -19,9 +19,9 @@ def reply(comment, text):
 def replace_links(text):
     links = []
     for (find_regex, replace_regex) in regex:
-        for i in re.findall(find_regex, comment):
+        for i in re.findall(find_regex, text):
             i = re.sub(replace_regex, "", i)
-            links.append(j)
+            links.append(i)
     return links
 
 def main():
