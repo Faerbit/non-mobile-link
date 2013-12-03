@@ -126,6 +126,8 @@ class TestAPI(unittest.TestCase):
 
     def test_main_loop(self):
         bot.main("test")
+        # test that every link only gets processed once
+        bot.main("test")
         text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
         #test for submission and comment correction
         assertIs(helper_search_for_comment(text), True)
