@@ -97,16 +97,17 @@ class TestRegex(unittest.TestCase):
 
 class TestAPI(unittest.TestCase):
     #testAPI=False
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         #if not TestAPI.testAPI:
         #    TestAPI.skipTest(self, "testAPI not specified")
-        self.reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
-        self.reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-        self.submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
-        self.submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
-        self.already_checked = set()
+        cls.reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
+        cls.reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
+        cls.submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        cls.submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        cls.already_checked = set()
         #fake original set
-        self.already_done = set()
+        cls.already_done = set()
 
     def helper_search_for_comment(comment_text):
         comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
