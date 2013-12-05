@@ -114,6 +114,7 @@ class TestAPI(unittest.TestCase):
             "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
         comments = self.submission.comments
         for i in comments:
+            #TODO only check comments from bot user
             if comment.id not in self.already_checked and comment_text == i.body:
                 already_checked.add(comment.id)
                 return True
