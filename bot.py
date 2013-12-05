@@ -35,13 +35,14 @@ def main(subreddit):
             if len(links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
-                already_done.add(reply(comment, text))
+                already_done_comments.add(reply(comment, text))
             elif len(links) > 1:
                 text = "Non-mobile links:"
                 for i in links:
                     text += str(i)
                     text += "\n\n"
-                already_done.add(reply(comment, text))
+                already_done_comments.add(reply(comment, text))
+            already_done_comments.add(comment.id)
     submissions = reddit.get_subreddit(subreddit)
     for submission in submissions:
         if submission.id not in already_done:
@@ -51,10 +52,12 @@ def main(subreddit):
             if len (links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
-                already_done.add(reply(text))
+                already_done_submissions.add(reply(submission, text))
+            already_done_submissions.add(submission.id)
 
 if __name__ == "__main__":
-    already_done = set()
+    already_done_comments = set()
+    already_done_submissions = set()
     user_agent=("Non-mobile link 0.1 by /u/faerbit")
     reddit = praw.Reddit(user_agent=user_agent)
     reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
