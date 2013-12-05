@@ -28,7 +28,7 @@ def replace_links(text):
 def main(subreddit):
     comments = reddit.get_comments(subreddit)
     for comment in comments:
-        if comment.id not in already_done:
+        if comment.id not in already_done_comments:
             text = ""
             links = []
             links.append(replace_links(comment.body))
@@ -45,7 +45,7 @@ def main(subreddit):
             already_done_comments.add(comment.id)
     submissions = reddit.get_subreddit(subreddit)
     for submission in submissions:
-        if submission.id not in already_done:
+        if submission.id not in already_done_submissions:
             text = ""
             links = []
             links.append(replace_links(submission.url))
