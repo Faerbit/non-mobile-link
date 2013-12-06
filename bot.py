@@ -25,8 +25,8 @@ def replace_links(text):
             links.append(i)
     return links
 
-def main(subreddit):
-    comments = reddit.get_comments(subreddit)
+def worker(reddit_session, already_done_comments, already_done_submissions, subreddit):
+    comments = reddit_session.get_comments(subreddit)
     for comment in comments:
         if comment.id not in already_done_comments:
             text = ""
@@ -43,7 +43,7 @@ def main(subreddit):
                     text += "\n\n"
                 already_done_comments.add(reply(comment, text))
             already_done_comments.add(comment.id)
-    submissions = reddit.get_subreddit(subreddit)
+    submissions = reddit_session.get_subreddit(subreddit)
     for submission in submissions:
         if submission.id not in already_done_submissions:
             text = ""
@@ -55,10 +55,13 @@ def main(subreddit):
                 already_done_submissions.add(reply(submission, text))
             already_done_submissions.add(submission.id)
 
-if __name__ == "__main__":
+def main():
     already_done_comments = set()
     already_done_submissions = set()
     user_agent=("Non-mobile link 0.1 by /u/faerbit")
     reddit = praw.Reddit(user_agent=user_agent)
     reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-    main("test")
+    main(reddit, already_done_comments, already_done_submissions, "test")
+
+if __name__ == "__main__":
+    main()
