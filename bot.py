@@ -48,7 +48,10 @@ def worker(reddit_session, already_done_comments, already_done_submissions, subr
         if submission.id not in already_done_submissions:
             text = ""
             links = []
-            links.append(replace_links(submission.url))
+            if submission.is_self:
+                links.append(replace_links(submission.selftext))
+            else:
+                links.append(replace_links(submission.url))
             if len (links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
