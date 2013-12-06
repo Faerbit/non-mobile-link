@@ -128,8 +128,8 @@ class TestAPI(unittest.TestCase):
         comment_author="Redditor(user_name='non-mobile-linkbot')"
         comments = TestAPI.submission.comments
         for i in comments:
-            if comment.id not in self.already_checked and comment.author == comment_author 
-                and comment_text == i.body:
+            if comment.id not in self.already_checked and 
+                comment.author == comment_author and comment_text == i.body:
                 already_checked.add(comment.id)
                 return True
         return False
