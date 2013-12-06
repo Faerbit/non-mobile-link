@@ -61,7 +61,7 @@ def main():
     user_agent=("Non-mobile link 0.1 by /u/faerbit")
     reddit = praw.Reddit(user_agent=user_agent)
     reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-    main(reddit, already_done_comments, already_done_submissions, "test")
+    worker(reddit, already_done_comments, already_done_submissions, "test")
 
 if __name__ == "__main__":
     main()
