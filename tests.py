@@ -6,6 +6,7 @@ import unittest
 import argparse
 import sys
 import os
+import time
 
 class TestRegex(unittest.TestCase):
     non_link_word = "Goat"
@@ -97,22 +98,34 @@ class TestRegex(unittest.TestCase):
 
 class TestAPI(unittest.TestCase):
     #testAPI=False
+    already_checked = set()
+    #fake original set
+    already_done_submissions = set()
+    already_done_comments = set()
+    reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
+    submission = praw.objects.Submission
+
     @classmethod
     def setUpClass(cls):
         #if not TestAPI.testAPI:
         #    TestAPI.skipTest(self, "testAPI not specified")
-        cls.reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
         cls.reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-        cls.submission = reddit.submit("test", "non-mobile test", "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        for attempt in range(11):
+            try:
+                cls.submission = cls.reddit.submit("test", "non-mobile test", 
+                        "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+            except praw.errors.RateLimitExceeded:
+                time.sleep(60)
+                continue
+            break
+        else:
+            raise Exception("Could not submit test link. Is reddit down?")
         cls.submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
-        cls.already_checked = set()
-        #fake original set
-        cls.already_done = set()
 
     def helper_search_for_comment(comment_text):
         comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
             "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
-        comments = self.submission.comments
+        comments = TestAPI.submission.comments
         for i in comments:
             #TODO only check comments from bot user
             if comment.id not in self.already_checked and comment_text == i.body:
@@ -121,9 +134,9 @@ class TestAPI(unittest.TestCase):
         return False
 
     def test_reply_function(self):
-        comment = self.submission.comments[0]
+        comment = TestAPI.submission.comments[0]
         text="Testing reply function"
-        bot.reply(random_comment, text)
+        bot.reply(comment, text)
         assertIs(helper_search_for_comment(text), True)
 
     def test_main_loop(self):
