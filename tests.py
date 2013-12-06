@@ -141,13 +141,14 @@ class TestAPI(unittest.TestCase):
         assertIs(helper_search_for_comment(text), True)
 
     def test_main_loop(self):
-        bot.main("test")
-        # test that every link only gets processed once
-        bot.main("test")
+        bot.main(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
         text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
         #test for submission and comment correction
         assertIs(helper_search_for_comment(text), True)
         assertIs(helper_search_for_comment(text), True)
+        # test that every link only gets processed once
+        bot.main(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
+        assertIs(helper_search_for_comment(text), False)
 
 
 if __name__ == "__main__":
