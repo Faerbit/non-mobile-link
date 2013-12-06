@@ -125,10 +125,11 @@ class TestAPI(unittest.TestCase):
     def helper_search_for_comment(comment_text):
         comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
             "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
+        comment_author="Redditor(user_name='non-mobile-linkbot')"
         comments = TestAPI.submission.comments
         for i in comments:
-            #TODO only check comments from bot user
-            if comment.id not in self.already_checked and comment_text == i.body:
+            if comment.id not in self.already_checked and comment.author=comment_author 
+                and comment_text == i.body:
                 already_checked.add(comment.id)
                 return True
         return False
