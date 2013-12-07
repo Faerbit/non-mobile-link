@@ -130,11 +130,11 @@ class TestAPI(unittest.TestCase):
             "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
         comment_author="Redditor(user_name='non-mobile-linkbot')"
         comments = praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id).comments
-        for i in comments:
-            if (comment.id not in self.already_checked and 
-                comment.author == comment_author and comment_text == i.body):
-                already_checked.add(comment.id)
-                return True
+        for comment in comments:
+            if (comment.id not in TestAPI.already_checked and 
+                comment.author == comment_author and comment_text == comment.body):
+                TestAPI.already_checked.add(comment.id)
+                return comment.body
         return False
 
     def test_reply_function(self):
@@ -142,17 +142,17 @@ class TestAPI(unittest.TestCase):
         comment = submission.comments[0]
         text="Testing reply function"
         bot.reply(comment, text)
-        self.assertTrue(helper_search_for_comment(text)
+        self.assertEqual(TestAPI.helper_search_for_comment(text), text)
 
     def test_worker(self):
         bot.worker(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
         text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
         #test for submission and comment correction
-        self.assertTrue(helper_search_for_comment(text))
-        self.assertTrue(helper_search_for_comment(text))
+        self.assertEqual(TestAPI.helper_search_for_comment(text), text)
+        self.assertEqual(TestAPI.helper_search_for_comment(text), text)
         # test that every link only gets processed once
         bot.worker(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
-        self.assertTrue(helper_search_for_comment(text))
+        self.assertFalse(TestAPI.helper_search_for_comment(text))
 
 
 if __name__ == "__main__":
