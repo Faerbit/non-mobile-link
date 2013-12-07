@@ -28,7 +28,7 @@ def replace_links(text):
     return links
 
 def worker(reddit_session, already_done_comments, already_done_submissions, subreddit):
-    comments = reddit_session.get_comments(subreddit)
+    comments = praw.helpers.flatten_tree(reddit_session.get_comments(subreddit))
     for comment in comments:
         if comment.id not in already_done_comments:
             links = replace_links(comment.body)
@@ -46,12 +46,11 @@ def worker(reddit_session, already_done_comments, already_done_submissions, subr
     submissions = reddit_session.get_subreddit(subreddit).get_top(limit=None)
     for submission in submissions:
         if submission.id not in already_done_submissions:
-            links = []
             if submission.is_self:
                 links = replace_links(submission.selftext)
             else:
                 links = replace_links(submission.url)
-            if len (links) == 1:
+            if len(links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
                 already_done_submissions.add(reply(submission, text))

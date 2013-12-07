@@ -127,7 +127,7 @@ class TestAPI(unittest.TestCase):
 
     def helper_search_for_comment(comment_text):
         accepted_author="Redditor(user_name='non-mobile-linkbot')"
-        comments = praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id).comments
+        comments = praw.helpers.flatten_tree(praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id).comments)
         for comment in comments:
             if (comment.id not in TestAPI.already_checked and 
                 comment.author == accepted_author and comment_text == comment.body):
@@ -152,6 +152,7 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(TestAPI.helper_search_for_comment(expected_text), expected_text)
 
     def test_worker_processes_every_link_only_once(self):
+        text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
         bot.worker(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
         self.assertFalse(TestAPI.helper_search_for_comment(text))
 
