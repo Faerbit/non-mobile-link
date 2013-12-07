@@ -152,7 +152,7 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(TestAPI.helper_search_for_comment(expected_text), expected_text)
 
     def test_worker_processes_every_link_only_once(self):
-        bot.worker(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
+        bot.worker(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
         self.assertFalse(TestAPI.helper_search_for_comment(text))
 
 
