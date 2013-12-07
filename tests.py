@@ -126,13 +126,11 @@ class TestAPI(unittest.TestCase):
         cls.submission_id=submission.id
 
     def helper_search_for_comment(comment_text):
-        comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
-            "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
-        comment_author="Redditor(user_name='non-mobile-linkbot')"
+        accepted_author="Redditor(user_name='non-mobile-linkbot')"
         comments = praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id).comments
         for comment in comments:
             if (comment.id not in TestAPI.already_checked and 
-                comment.author == comment_author and comment_text == comment.body):
+                comment.author == accepted_author and comment_text == comment.body):
                 TestAPI.already_checked.add(comment.id)
                 return comment.body
         return False
@@ -140,17 +138,20 @@ class TestAPI(unittest.TestCase):
     def test_reply_function(self):
         submission = praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id)
         comment = submission.comments[0]
-        text="Testing reply function"
+        text = "Testing reply function"
+        expected_text = text + bot.disclaimer
         bot.reply(comment, text)
-        self.assertEqual(TestAPI.helper_search_for_comment(text), text)
+        self.assertEqual(TestAPI.helper_search_for_comment(expected_text), expected_text)
 
     def test_worker(self):
         bot.worker(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
         text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
+        expected_text = text + bot.disclaimer
         #test for submission and comment correction
-        self.assertEqual(TestAPI.helper_search_for_comment(text), text)
-        self.assertEqual(TestAPI.helper_search_for_comment(text), text)
-        # test that every link only gets processed once
+        self.assertEqual(TestAPI.helper_search_for_comment(expected_text), expected_text)
+        self.assertEqual(TestAPI.helper_search_for_comment(expected_text), expected_text)
+
+    def test_worker_processes_every_link_only_once(self):
         bot.worker(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
         self.assertFalse(TestAPI.helper_search_for_comment(text))
 

@@ -8,9 +8,11 @@ regex= [
     (re.compile("https?://[a-zA-Z]*\.m\.wikipedia\.org/wiki/[a-zA-Z0-9_#%]*"), re.compile("m\.")), #wikipedia
     ]
 
-def reply(reply_object, text):
-    text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
+disclaimer = ("\n\n ^Got ^any ^problems ^or ^suggestions ^for ^me? "
         "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
+
+def reply(reply_object, text):
+    text += disclaimer
     if isinstance(reply_object, praw.objects.Comment):
         reply_object.reply(text)
     if isinstance(reply_object, praw.objects.Submission):
