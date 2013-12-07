@@ -142,17 +142,17 @@ class TestAPI(unittest.TestCase):
         comment = submission.comments[0]
         text="Testing reply function"
         bot.reply(comment, text)
-        assertIs(helper_search_for_comment(text), True)
+        self.assertTrue(helper_search_for_comment(text)
 
     def test_worker(self):
         bot.worker(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
         text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
         #test for submission and comment correction
-        assertIs(helper_search_for_comment(text), True)
-        assertIs(helper_search_for_comment(text), True)
+        self.assertTrue(helper_search_for_comment(text))
+        self.assertTrue(helper_search_for_comment(text))
         # test that every link only gets processed once
         bot.worker(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
-        assertIs(helper_search_for_comment(text), False)
+        self.assertTrue(helper_search_for_comment(text))
 
 
 if __name__ == "__main__":
