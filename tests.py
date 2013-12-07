@@ -103,30 +103,33 @@ class TestAPI(unittest.TestCase):
     already_done_submissions = set()
     already_done_comments = set()
     reddit = praw.Reddit(user_agent="Non-mobile link tester by /u/faerbit")
-    submission = praw.objects.Submission
+    submission_id = ""
 
     @classmethod
     def setUpClass(cls):
         #if not TestAPI.testAPI:
         #    TestAPI.skipTest(self, "testAPI not specified")
         cls.reddit.login("non-mobile-linkbot", os.environ["NON_MOBILE_LINKBOT_PASSWORD"])
-        for attempt in range(11):
+        #submit a link even if the RateLimit is met
+        submission = praw.objects.Submission
+        for attempt in range(12):
             try:
-                cls.submission = cls.reddit.submit("test", "non-mobile test", 
-                        "https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+                submission = cls.reddit.submit("test", "non-mobile test", 
+                        text="https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
             except praw.errors.RateLimitExceeded:
                 time.sleep(60)
                 continue
             break
         else:
             raise Exception("Could not submit test link. Is reddit down?")
-        cls.submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        submission.add_comment("https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte")
+        cls.submission_id=submission.id
 
     def helper_search_for_comment(comment_text):
         comment_text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
             "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
         comment_author="Redditor(user_name='non-mobile-linkbot')"
-        comments = TestAPI.submission.comments
+        comments = praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id).comments
         for i in comments:
             if (comment.id not in self.already_checked and 
                 comment.author == comment_author and comment_text == i.body):
@@ -135,19 +138,20 @@ class TestAPI(unittest.TestCase):
         return False
 
     def test_reply_function(self):
-        comment = TestAPI.submission.comments[0]
+        submission = praw.objects.Submission.from_id(TestAPI.reddit, TestAPI.submission_id)
+        comment = submission.comments[0]
         text="Testing reply function"
         bot.reply(comment, text)
         assertIs(helper_search_for_comment(text), True)
 
-    def test_main_loop(self):
-        bot.main(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
+    def test_worker(self):
+        bot.worker(TestAPI.reddit, TestAPI.already_done_comments, TestAPI.already_done_submissions, "test")
         text = "Non-mobile link: https://de.m.wikipedia.org/wiki/Luftselbstverteidigungsstreitkr%C3%A4fte"
         #test for submission and comment correction
         assertIs(helper_search_for_comment(text), True)
         assertIs(helper_search_for_comment(text), True)
         # test that every link only gets processed once
-        bot.main(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
+        bot.worker(TestAPI.reddit, already_done_comments, already_done_submissions, "test")
         assertIs(helper_search_for_comment(text), False)
 
 
