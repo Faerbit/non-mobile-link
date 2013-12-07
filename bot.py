@@ -29,9 +29,7 @@ def worker(reddit_session, already_done_comments, already_done_submissions, subr
     comments = reddit_session.get_comments(subreddit)
     for comment in comments:
         if comment.id not in already_done_comments:
-            text = ""
-            links = []
-            links.append(replace_links(comment.body))
+            links = replace_links(comment.body)
             if len(links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
@@ -39,19 +37,18 @@ def worker(reddit_session, already_done_comments, already_done_submissions, subr
             elif len(links) > 1:
                 text = "Non-mobile links:"
                 for i in links:
-                    text += str(i)
+                    text += str(links[i])
                     text += "\n\n"
                 already_done_comments.add(reply(comment, text))
             already_done_comments.add(comment.id)
-    submissions = reddit_session.get_subreddit(subreddit)
+    submissions = reddit_session.get_subreddit(subreddit).get_top(limit=None)
     for submission in submissions:
         if submission.id not in already_done_submissions:
-            text = ""
             links = []
             if submission.is_self:
-                links.append(replace_links(submission.selftext))
+                links = replace_links(submission.selftext)
             else:
-                links.append(replace_links(submission.url))
+                links = replace_links(submission.url)
             if len (links) == 1:
                 text = "Non-mobile link: "
                 text += str(links[0])
