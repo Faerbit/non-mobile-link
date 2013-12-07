@@ -11,9 +11,9 @@ regex= [
 def reply(reply_object, text):
     text += ("\n\n ^Got ^any ^problems/suggestions ^with ^this ^bot? "
         "^Message ^/u/faerbit ^or ^check ^out ^the ^[code](https://github.com/Faerbit/non-mobile-link)!")
-    if isinstance(reply_object, praw.object.Comment):
+    if isinstance(reply_object, praw.objects.Comment):
         reply_object.reply(text)
-    if isinstance(reply_object, praw.object.Submission):
+    if isinstance(reply_object, praw.objects.Submission):
         reply_object.add_comment(text)
     return reply_object.id
 
